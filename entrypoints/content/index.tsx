@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom/client";
+import "virtual:uno.css";
 import { DevTool } from "./dev-tool";
-import "./content/style.css";
 
 export default defineContentScript({
   matches: ["<all_urls>"],
