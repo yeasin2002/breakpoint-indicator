@@ -5,111 +5,143 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useEffect, useState } from "react";
 
-interface DevToolProps {
-  version?: string;
-  errorCount?: number;
-  routeType?: "Static" | "Dynamic";
+
+const BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  "2xl": 1536,
+} as const;
+
+type BreakpointKey = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+
+function getBreakpoint(width: number): BreakpointKey {
+  if (width >= BREAKPOINTS["2xl"]) return "2xl";
+  if (width >= BREAKPOINTS.xl) return "xl";
+  if (width >= BREAKPOINTS.lg) return "lg";
+  if (width >= BREAKPOINTS.md) return "md";
+  if (width >= BREAKPOINTS.sm) return "sm";
+  return "xs";
 }
 
-export function DevTool({
-  version = "v13.4.8",
-  errorCount = 3,
-  routeType = "Static",
-}: DevToolProps) {
+interface ScreenInfo {
+  viewportWidth: number;
+  viewportHeight: number;
+  screenWidth: number;
+  screenHeight: number;
+  breakpoint: BreakpointKey;
+  pixelRatio: number;
+  orientation: "portrait" | "landscape";
+  colorScheme: "light" | "dark";
+  touchEnabled: boolean;
+}
+
+function useScreenInfo(): ScreenInfo | null {
+  const [screenInfo, setScreenInfo] = useState<ScreenInfo | null>(null);
+
+  useEffect(() => {
+    const updateScreenInfo = () => {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      setScreenInfo({
+        viewportWidth,
+        viewportHeight,
+        screenWidth: window.screen.width,
+        screenHeight: window.screen.height,
+        breakpoint: getBreakpoint(viewportWidth),
+        pixelRatio: window.devicePixelRatio || 1,
+        orientation: viewportWidth > viewportHeight ? "landscape" : "portrait",
+        colorScheme: window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light",
+        touchEnabled: "ontouchstart" in window || navigator.maxTouchPoints > 0,
+      });
+    };
+
+    updateScreenInfo();
+
+    window.addEventListener("resize", updateScreenInfo);
+    const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    colorSchemeQuery.addEventListener("change", updateScreenInfo);
+
+    return () => {
+      window.removeEventListener("resize", updateScreenInfo);
+      colorSchemeQuery.removeEventListener("change", updateScreenInfo);
+    };
+  }, []);
+
+  return screenInfo;
+}
+
+interface InfoRowProps {
+  label: string;
+  value: string | number;
+}
+
+function InfoRow({ label, value }: InfoRowProps) {
+  return (
+    <div className="flex items-center justify-between py-1.5 border-b border-gray-800 last:border-b-0">
+      <span className="text-gray-400 text-sm">{label}</span>
+      <span className="text-white text-sm font-mono">{value}</span>
+    </div>
+  );
+}
+
+export function DevTool() {
+  const screenInfo = useScreenInfo();
+
+  // SSR fallback
+  if (!screenInfo) {
+    return (
+      <div className="flex items-center justify-center size-12 rounded-full border-2 border-black bg-white">
+        <span className="text-sm">...</span>
+      </div>
+    );
+  }
+
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <button
-          className=" flex items-center justify-center size-10 rounded-full border-2 border-black bg-white transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
-          aria-label="Next.js Dev Tool"
-        >
-          <svg
-            className="size-5"
-            viewBox="0 0 180 180"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <mask
-              id="mask0_408_134"
-              style={{ maskType: "alpha" }}
-              maskUnits="userSpaceOnUse"
-              x="0"
-              y="0"
-              width="180"
-              height="180"
-            >
-              <circle cx="90" cy="90" r="90" fill="black" />
-            </mask>
-            <g mask="url(#mask0_408_134)">
-              <circle cx="90" cy="90" r="90" fill="black" />
-              <path
-                d="M149.508 157.52L69.142 54H54V125.97H66.1136V69.3836L139.999 164.845C143.333 162.614 146.509 160.165 149.508 157.52Z"
-                fill="url(#paint0_linear_408_134)"
-              />
-              <rect
-                x="115"
-                y="54"
-                width="12"
-                height="72"
-                fill="url(#paint1_linear_408_134)"
-              />
-            </g>
-            <defs>
-              <linearGradient
-                id="paint0_linear_408_134"
-                x1="109"
-                y1="116.5"
-                x2="144.5"
-                y2="160.5"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="white" />
-                <stop offset="1" stopColor="white" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient
-                id="paint1_linear_408_134"
-                x1="121"
-                y1="54"
-                x2="120.799"
-                y2="106.875"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stopColor="white" />
-                <stop offset="1" stopColor="white" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </button>
+      <PopoverTrigger
+        className="flex items-center justify-center size-12 rounded-full border-2 border-black bg-white transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
+        aria-label="Dev Tool - Screen Info"
+      >
+        <span className="text-sm font-semibold uppercase">
+          {screenInfo.breakpoint}
+        </span>
       </PopoverTrigger>
 
       <PopoverContent
         side="top"
         align="start"
         sideOffset={12}
-        className="w-56 p-4 rounded-xl border-0 shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
-        style={{ backgroundColor: "black" }}
+        className="p-4 rounded-xl border-0 shadow-xl animate-in fade-in-0 zoom-in-95"
+        style={{ backgroundColor: "#0a0a0a", minWidth: "16rem" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-white font-medium text-sm">Next.js</span>
-          <span className="text-gray-400 text-sm font-mono">{version}</span>
+        <div className="flex items-center gap-2 mb-3 pb-2 border-b border-gray-700">
+          <div className="size-2 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-white font-semibold text-sm">Screen Info</span>
         </div>
 
-        {/* Errors Row */}
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-white text-sm">Errors</span>
-          {errorCount > 0 && (
-            <span className="flex items-center justify-center min-w-[24px] h-6 px-2 rounded-full bg-red-500/20 text-red-500 text-xs font-medium">
-              {errorCount}
-            </span>
-          )}
-        </div>
-
-        {/* Route Row */}
-        <div className="flex items-center justify-between">
-          <span className="text-white text-sm">Route</span>
-          <span className="text-gray-400 text-sm">{routeType}</span>
+        {/* Info Items */}
+        <div className="space-y-0">
+          <InfoRow label="Breakpoint" value={screenInfo.breakpoint.toUpperCase()} />
+          <InfoRow
+            label="Viewport"
+            value={`${screenInfo.viewportWidth} × ${screenInfo.viewportHeight}`}
+          />
+          <InfoRow
+            label="Screen"
+            value={`${screenInfo.screenWidth} × ${screenInfo.screenHeight}`}
+          />
+          <InfoRow label="Pixel Ratio" value={`${screenInfo.pixelRatio}x`} />
+          <InfoRow label="Orientation" value={screenInfo.orientation} />
+          <InfoRow label="Color Scheme" value={screenInfo.colorScheme} />
+          <InfoRow label="Touch" value={screenInfo.touchEnabled ? "Yes" : "No"} />
         </div>
       </PopoverContent>
     </Popover>
