@@ -1,10 +1,11 @@
 {
   "name": "responsive-kit",
   "displayName": "ResponsiveKit",
-  "description": "manifest.json description",
+  "description": "Real-time responsive breakpoint indicator for developers",
   "private": true,
   "version": "0.1.0-beta.1",
   "type": "module",
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
