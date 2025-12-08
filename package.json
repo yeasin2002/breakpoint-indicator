@@ -26,7 +26,8 @@
     "changeset:add": "changeset add",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
-    "release": "pnpm check:fix && pnpm compile && pnpm build && pnpm changeset:version"
+    "release": "pnpm check:fix && pnpm compile && pnpm build && pnpm changeset:version",
+    "release:publish": "echo 'Publishing to GitHub Releases'"
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-rc.0",

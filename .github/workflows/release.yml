@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check code quality
+        run: pnpm check:fix
+
+      - name: Type check
+        run: pnpm compile
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset:version
+          publish: pnpm run release:publish
+          commit: 'chore: release'
+          title: 'chore: release'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Chrome Extension
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm build
+
+      - name: Build Firefox Extension
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm build:firefox
+
+      - name: Create Chrome ZIP
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm zip
+
+      - name: Create Firefox ZIP
+        if: steps.changesets.outputs.published == 'true'
+        run: pnpm zip:firefox
+
+      - name: Get version
+        if: steps.changesets.outputs.published == 'true'
+        id: version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Rename ZIP files
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          mv .output/responsive-kit-*.zip .output/responsive-kit-${{ steps.version.outputs.version }}-chrome.zip || true
+          mv .output/responsive-kit-*-firefox.zip .output/responsive-kit-${{ steps.version.outputs.version }}-firefox.zip || true
+
+      - name: Create GitHub Release
+        if: steps.changesets.outputs.published == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          body: |
+            ## What's Changed
+            
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+            
+            ## Installation
+            
+            ### Chrome/Edge
+            1. Download `responsive-kit-${{ steps.version.outputs.version }}-chrome.zip`
+            2. Extract the ZIP file
+            3. Open Chrome/Edge and go to `chrome://extensions/`
+            4. Enable "Developer mode"
+            5. Click "Load unpacked" and select the extracted folder
+            
+            ### Firefox
+            1. Download `responsive-kit-${{ steps.version.outputs.version }}-firefox.zip`
+            2. Extract the ZIP file
+            3. Open Firefox and go to `about:debugging#/runtime/this-firefox`
+            4. Click "Load Temporary Add-on"
+            5. Select any file in the extracted folder
+          files: |
+            .output/responsive-kit-${{ steps.version.outputs.version }}-chrome.zip
+            .output/responsive-kit-${{ steps.version.outputs.version }}-firefox.zip
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'rc') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
