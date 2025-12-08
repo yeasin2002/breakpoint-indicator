@@ -20,8 +20,13 @@
     "format": "biome format --write",
     "format:check": "biome format",
     "check": "biome check",
-    "check:fix": "biome check --write", 
-    "knip": "knip"
+    "check:fix": "biome check --write",
+    "knip": "knip",
+    "changeset": "changeset",
+    "changeset:add": "changeset add",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
+    "release": "pnpm check:fix && pnpm compile && pnpm build && pnpm changeset:version"
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-rc.0",
@@ -35,6 +40,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.8",
+    "@changesets/cli": "^2.29.8",
     "@types/node": "^24.10.1",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
