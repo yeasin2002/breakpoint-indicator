@@ -34,7 +34,7 @@ export function DevTool() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger
-        className="relative flex items-center justify-center size-12 rounded-full border-2 border-black bg-white transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black"
+        className="relative flex items-center justify-center size-12 rounded-full border-2 border-black bg-white transition-all duration-200  hover:shadow-lg active:scale-95 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black"
         aria-label={
           isOpen
             ? "Close screen information"
@@ -51,6 +51,7 @@ export function DevTool() {
         className="p-4 rounded-xl border-0 shadow-xl bg-[#0a0a0a] min-w-64"
         role="dialog"
         aria-label="Screen information details"
+        style={{ backgroundColor: "#0a0a0a" }}
       >
         <ScreenInfoPanel screenInfo={screenInfo} />
       </PopoverContent>
