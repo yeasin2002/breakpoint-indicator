@@ -1,4 +1,4 @@
-# Breakpoint Indicator
+# ResponsiveKit
 
 A browser extension that displays real-time responsive breakpoint information while browsing. Built with WXT, React, UnoCSS, and shadcn/ui.
 

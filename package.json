@@ -1,9 +1,9 @@
 {
-  "name": "breakpoint-indicator",
-  "displayName": "Breakpoint Indicator",
+  "name": "responsive-kit",
+  "displayName": "ResponsiveKit",
   "description": "manifest.json description",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",
