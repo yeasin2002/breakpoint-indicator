@@ -21,7 +21,7 @@ export function ScreenInfoPanel({ screenInfo }: ScreenInfoPanelProps) {
 			</div>
 
 			{/* Info Items */}
-			<div className="space-y-0" role="list">
+			<ul className="space-y-0 list-none">
 				<ScreenInfoRow
 					label="Breakpoint"
 					value={screenInfo.breakpoint.toUpperCase()}
@@ -44,7 +44,7 @@ export function ScreenInfoPanel({ screenInfo }: ScreenInfoPanelProps) {
 					label="Touch"
 					value={screenInfo.touchEnabled ? "Yes" : "No"}
 				/>
-			</div>
+			</ul>
 		</>
 	);
 }

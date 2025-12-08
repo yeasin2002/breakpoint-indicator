@@ -1,7 +1,7 @@
+import { useState } from "react";
 import { BreakpointBadge } from "@/components/breakpoint-badge";
 import { ScreenInfoPanel } from "@/components/screen-info-panel";
 import { useScreenInfo } from "@/lib/hooks/use-screen-info";
-import { useState } from "react";
 
 /**
  * DevTool component - A floating responsive breakpoint indicator
@@ -14,15 +14,14 @@ export function DevTool() {
 	// Loading state while screen info initializes
 	if (!screenInfo) {
 		return (
-			<div
+			<output
 				className="flex items-center justify-center size-12 rounded-full border-2 border-black bg-white"
-				role="status"
 				aria-label="Loading screen information"
 			>
 				<span className="text-sm" aria-hidden="true">
 					...
 				</span>
-			</div>
+			</output>
 		);
 	}
 
