@@ -8,6 +8,8 @@ export default defineContentScript({
   cssInjectionMode: "ui",
 
   async main(ctx) {
+    let isVisible = false;
+
     const ui = await createShadowRootUi(ctx, {
       name: "dev-tool-ui",
       position: "inline",
@@ -29,6 +31,18 @@ export default defineContentScript({
       },
     });
 
-    ui.mount();
+    // Listen for toggle messages from background script
+    browser.runtime.onMessage.addListener((message) => {
+      if (message.type === "TOGGLE_DEVTOOL") {
+        if (isVisible) {
+          ui.remove();
+        } else {
+          ui.mount();
+        }
+        isVisible = !isVisible;
+      }
+    });
+
+    // Don't mount automatically - wait for user to click extension icon
   },
 });
