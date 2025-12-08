@@ -12,9 +12,11 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "clean": "wxt clean"
   },
   "dependencies": {
+    "@base-ui-components/react": "1.0.0-rc.0",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.4",
     "clsx": "^2.1.1",

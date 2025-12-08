@@ -126,48 +126,46 @@ export function DevTool() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger
-        className="flex items-center justify-center size-12 rounded-full border-2 border-black bg-white transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 cursor-pointer overflow-hidden"
+        className="relative flex items-center justify-center size-12 rounded-full border-2 border-black bg-white transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95 cursor-pointer"
         aria-label={
           isOpen
             ? "Close screen information"
             : `Current breakpoint: ${screenInfo.breakpoint}. Click to view detailed screen information.`
         }
       >
-        <div className="relative size-full flex items-center justify-center">
-          {/* X Icon */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-            className={`absolute transition-all duration-300 ${
-              isOpen
-                ? "opacity-100 scale-100 rotate-0 pointer-events-auto"
-                : "opacity-0 scale-50 rotate-90 pointer-events-none"
-            }`}
-          >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
-          </svg>
+        {/* X Icon */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+          className={`absolute transition-all duration-300 ${
+            isOpen
+              ? "opacity-100 scale-100 rotate-0"
+              : "opacity-0 scale-50 rotate-90"
+          }`}
+        >
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
 
-          {/* Breakpoint Text */}
-          <span
-            className={`text-sm font-semibold uppercase transition-all duration-300 ${
-              isOpen
-                ? "opacity-0 scale-50 -rotate-90 pointer-events-none"
-                : "opacity-100 scale-100 rotate-0 pointer-events-auto"
-            }`}
-            aria-hidden="true"
-          >
-            {screenInfo.breakpoint}
-          </span>
-        </div>
+        {/* Breakpoint Text */}
+        <span
+          className={`text-sm font-semibold uppercase transition-all duration-300 ${
+            isOpen
+              ? "opacity-0 scale-50 -rotate-90"
+              : "opacity-100 scale-100 rotate-0"
+          }`}
+          aria-hidden="true"
+        >
+          {screenInfo.breakpoint}
+        </span>
       </PopoverTrigger>
 
       <PopoverContent
