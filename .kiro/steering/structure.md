@@ -27,10 +27,8 @@ inclusion: always
 ├── assets/                 # Bundled assets
 │   └── react.svg
 ├── docs/                   # Documentation
-│   ├── CHANGESETS.md
-│   ├── CI_CD.md
-│   ├── VERSION_MANAGEMENT.md
-│   └── wxt-framework.md
+│   ├── RELEASING.md        # Version and release guide
+│   └── wxt-framework.md    # WXT framework reference
 ├── .wxt/                   # Auto-generated (don't edit)
 └── .output/                # Build output
 ```

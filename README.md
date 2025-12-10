@@ -2,15 +2,17 @@
 
 A browser extension that shows real-time responsive breakpoint info while you browse. Built with WXT, React, and UnoCSS.
 
+## Download now 
+
+<!-- chrome  -->
+<!-- firefox -->
+
 ## Features
 
 - 🎯 Toggle on demand via extension icon
 - 📱 Current breakpoint indicator (xs, sm, md, lg, xl, 2xl)
 - 📐 Viewport size, screen resolution, pixel ratio
-- 🎨 Light/dark mode detection
-- 🖱️ Touch capability detection
-- 🔒 Shadow DOM isolation (no style conflicts)
-- ⚡ Smooth animations
+
 
 ## Quick Start
 
@@ -70,7 +72,7 @@ Chrome, Firefox, Edge, and Chromium-based browsers (Manifest V3).
 ## Tech Stack
 
 - [WXT](https://wxt.dev) - Extension framework
-- React 19 - UI
+- [React](https://react.dev/)
 - [UnoCSS](https://unocss.dev) - Styling
 - [Biome](https://biomejs.dev) - Linting/formatting
 
