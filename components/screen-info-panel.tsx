@@ -45,6 +45,18 @@ export function ScreenInfoPanel({ screenInfo }: ScreenInfoPanelProps) {
 					value={screenInfo.touchEnabled ? "Yes" : "No"}
 				/>
 			</ul>
+
+			{/* Feedback Link */}
+			<p className="mt-3 pt-2 border-t border-gray-800 text-center">
+				<a
+					href="https://github.com/yeasin2002/ResponsiveKit/issues"
+					target="_blank"
+					rel="noopener noreferrer"
+					className="text-xs text-gray-400 hover:text-gray-300 transition-colors"
+				>
+					Have a suggestion or found a bug?
+				</a>
+			</p>
 		</>
 	);
 }
